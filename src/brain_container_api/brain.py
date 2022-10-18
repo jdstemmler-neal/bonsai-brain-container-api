@@ -23,7 +23,7 @@ class Brain():
         else:
             return data
 
-    def get_prediction(self, data:dict):
+    def get_prediction(self, data:dict, api_version=2):
         
         brain_data = self._validate_brain_input(data)
         response = requests.post(self.url, json=brain_data)
