@@ -1,5 +1,6 @@
 import requests
 import uuid
+from numpy import isfinite
 
 class Brain():
     def __init__(self, url:str='http://localhost', port:str='5000', clientId=None):
@@ -78,6 +79,10 @@ class Brain():
 
         return prediction
 
-    # legacy entrypoint for v1 api
+    # legacy entrypoint for v1 api and TC
     def get_recommendation(self, state:dict):
-        return self.get_prediction(data=state, api_version=1)
+        isValid = isfinite(list(state.values())).all()
+        if isValid:
+            return self.get_prediction(data=state, api_version=1)
+        else:
+            return {"error": "input data was not valid"}
