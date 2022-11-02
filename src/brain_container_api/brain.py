@@ -14,6 +14,7 @@ class Brain():
         else:
             self.clientId = clientId
 
+        self.inkling = self._get_inkling()
         self._set_brain_information()
 
     def _set_brain_information(self):
@@ -23,6 +24,7 @@ class Brain():
             self.brain_info = req.json()
             self.brain_name = self.brain_info['artifact']['provenance']['brainName']
             self.brain_version = self.brain_info['artifact']['provenance']['brainVersion']
+            self.brain_export_date = self.brain_info['artifact']['provenance']['timeOfExport']
 
     def _coerce_v1_schema(self, data:dict):
         if data.get('state') is None:
@@ -86,3 +88,7 @@ class Brain():
             return self.get_prediction(data=state, api_version=1)
         else:
             return {"error": "input data was not valid"}
+
+    def _get_inkling(self):
+        ink = requests.get(url=f'{self.url}/inkling')
+        return ink.content.decode('ASCII')
